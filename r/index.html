@@ -13,6 +13,8 @@
     <p>總分數: <span id="score_num"></span></p>
     <p>總資料:</p>
     <ul id="total_data"></ul>
+    <p>暱稱字串:</p>
+    <p id="name_data"></p>
 
     <script>
       var u_list = {};
@@ -50,9 +52,15 @@
                 total_score += u_list[ii].score;
             }
 
-            var $score_num = $("#score_num");
-            $score_num.text(total_score);
+            $("#score_num").text(total_score);
 
+            var $nameData = $("#name_data");
+            $nameData.empty();
+            var name_str = "";
+            for (var ii in u_list) {
+                name_str += u_list[ii].name + " ";
+            }
+            $nameData.text(name_str);
 
 
             // 每 1 秒更新一次
