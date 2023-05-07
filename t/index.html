@@ -1,37 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>rc_test</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-        }
+      body {
+        font-family: Arial, sans-serif;
+      }
     </style>
     <script src="js/jquery.js" type="text/javascript"></script>
     <script src="js/csmapi.js"></script>
     <script src="https://accounts.google.com/gsi/client" async defer></script>
-</head>
+  </head>
 
-<script>
+  <script>
     let updateInterval;
 
     function requestDeviceMotionPermission() {
-        if (typeof DeviceMotionEvent.requestPermission === 'function') {
+        if (typeof DeviceMotionEvent.requestPermission === "function") {
             DeviceMotionEvent.requestPermission()
-                .then(permissionState => {
-                    if (permissionState === 'granted') {
-                        window.addEventListener('devicemotion', handleDeviceMotion);
-                        updateInterval = setInterval(updateScore, 100);
-                    } else {
-                        alert('未獲得加速度感測器權限');
-                    }
-                })
-                .catch(console.error);
+            .then((permissionState) => {
+                if (permissionState === "granted") {
+                window.addEventListener("devicemotion", handleDeviceMotion);
+                updateInterval = setInterval(updateScore, 100);
+                } else {
+                alert("未獲得加速度感測器權限");
+                }
+            })
+            .catch(console.error);
         } else {
             // 如果瀏覽器不支持 requestPermission 方法，則直接添加事件監聽器
-            window.addEventListener('devicemotion', handleDeviceMotion);
+            window.addEventListener("devicemotion", handleDeviceMotion);
             updateInterval = setInterval(updateScore, 100);
         }
     }
@@ -67,49 +67,63 @@
 
         const cntElement = document.getElementById("count");
 
-        if (score >= 15 && cnt < 15){
+        if (score >= 15 && cnt < 15) {
             cnt += 1;
-            notshake = 0
+            notshake = 0;
         }
         cntElement.innerHTML = cnt.toFixed(2);
     }
 
     var mycntinterval = setInterval(updatecnt, 500);
-    function updatecnt(){
-        if(notshake && cnt > 0){
+    function updatecnt() {
+        if (notshake && cnt > 0) {
             cnt -= 1;
         }
         notshake = 1;
     }
 
     var mylevelinterval = setInterval(updatelevel, 5000);
-    function updatelevel(){
+    function updatelevel() {
         const levelElement = document.getElementById("level");
-        if(cnt >= 10 && level < 5){
+        if (cnt >= 10 && level < 5) {
             level += 1;
-            if(level == 5){
-                clearInterval(mylevelinterval);
-                mylevelinterval = setInterval(updatelevel, 10000);
-            }
-            else{
-                clearInterval(mylevelinterval);
-                mylevelinterval = setInterval(updatelevel, 5000);
-
+            if (level == 5) {
+            clearInterval(mylevelinterval);
+            mylevelinterval = setInterval(updatelevel, 10000);
+            } else {
+            clearInterval(mylevelinterval);
+            mylevelinterval = setInterval(updatelevel, 5000);
             }
             cnt = 0;
-        }
-        else if (cnt <= 10 && level > 1 ) {
+        } else if (cnt <= 10 && level > 1) {
             level -= 1;
             clearInterval(mylevelinterval);
             mylevelinterval = setInterval(updatelevel, 5000);
         }
         levelElement.innerHTML = level.toFixed(2);
     }
-</script>
+  </script>
 
-<body>
-    <button onclick="requestDeviceMotionPermission()">索取加速度感測器權限</button>
-    
+  <body>
+    <div
+        id="g_id_onload"
+        data-client_id="574577788873-rgrojpv60ea0h4imtl3pdpg0m7q8m7g3.apps.googleusercontent.com"
+        data-callback="onSignIn1"
+    ></div>
+    <div class="g_id_signin" data-type="standard"></div>
+
+    目前狀態：
+
+    <span id="GOOGLE_STATUS_1"></span>
+
+    <hr />
+
+    <button onclick="requestDeviceMotionPermission()">
+      索取加速度感測器權限
+    </button>
+
+    <hr />
+
     <h1>CALL_test</h1>
     <h2>USER ID: <span id="id">0</span></h2>
     <h2>分數: <span id="score">0</span></h2>
@@ -118,33 +132,59 @@
     <p>X 軸加速度: <span id="accelerationX">0</span> m/s²</p>
     <p>Y 軸加速度: <span id="accelerationY">0</span> m/s²</p>
     <p>Z 軸加速度: <span id="accelerationZ">0</span> m/s²</p>
-    
+
     <script>
+        function onSignIn1(response) {
+            var credential = response.credential,
+            profile = JSON.parse(
+                decodeURIComponent(
+                escape(
+                    window.atob(
+                    credential.split(".")[1].replace(/-/g, "+").replace(/_/g, "/")
+                    )
+                )
+                )
+            ), // 對 JWT 進行解碼
+            target = document.getElementById("GOOGLE_STATUS_1"),
+            html = "";
+
+            html += "ID: " + profile.sub + "<br/>";
+            html += "會員暱稱： " + profile.name + "<br/>";
+            html += "會員頭像：" + profile.picture + "<br/>";
+            html += "會員 email：" + profile.email + "<br/>";
+            target.innerHTML = html;
+        }
+
         function pushscore() {
             // 設定要 push 的裝置和資訊
-            var mac_addr = 'call029';
-            var idf_name = 'aud_test';
+            var mac_addr = "call029";
+            var idf_name = "aud_test";
 
             // 呼叫 csmapi.js 的 push 函式
-            csmapi.push(mac_addr, idf_name, [user_id, level], function(data, error) {
+            csmapi.push(
+            mac_addr,
+            idf_name,
+            [user_id, level],
+            function (data, error) {
                 if (error) {
-                    console.error('Failed to push score :', error);
-                    return;
+                console.error("Failed to push score :", error);
+                return;
                 }
 
                 // 每 5 秒更新一次
                 setTimeout(pushscore, 5000);
-            });
+            }
+            );
         }
 
-        // 初始化
-        let user_id = Math.floor(Math.random() * 10000) + 1;
-        var id = document.getElementById("id");
-        id.innerHTML = user_id.toFixed(0);
+      // 初始化
+      let user_id = Math.floor(Math.random() * 10000) + 1;
+      var id = document.getElementById("id");
+      id.innerHTML = user_id.toFixed(0);
 
-        csmapi.set_endpoint('https://6.iottalk.tw');
-        pushscore();
+      csmapi.set_endpoint("https://6.iottalk.tw");
+      pushscore();
 
     </script>
-</body>
+  </body>
 </html>
