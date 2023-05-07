@@ -7,7 +7,7 @@ $(function () {
     }
     
     function call_t(){
-        return 0;
+        // return 0;
     }
 
     function ida_init () {
