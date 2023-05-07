@@ -3,12 +3,12 @@ $(function () {
     var profile = {
         'dm_name': 'call',
         'idf_list': [],
-        'odf_list': [call_r],
+        'odf_list': [callr],
     }
     
 
     
-    function call_r (data) {
+    function callr (data) {
         return 0;
     }
 

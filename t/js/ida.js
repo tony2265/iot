@@ -2,11 +2,11 @@ $(function () {
     csmapi.set_endpoint ('https://6.iottalk.tw');
     var profile = {
         'dm_name': 'call',
-        'idf_list': [call_t],
+        'idf_list': [callt],
         'odf_list': [],
     }
     
-    function call_t(){
+    function callt(){
         // return 0;
     }
 
