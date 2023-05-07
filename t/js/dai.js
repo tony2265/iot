@@ -3,13 +3,7 @@ const dai = function (profile, ida) {
 	var idf_func = {};
 	
     var mac_addr = (function () {
-        function s () {
-            return Math.floor((1 + Math.random()) * 0x10000)
-                .toString(16)
-                .substring(1);
-        }
-        // return s() + s() + s();
-        return "call029";
+        return "calltt";
     })();
     console.log(mac_addr);
     if (profile.is_sim == undefined){

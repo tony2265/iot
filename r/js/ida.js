@@ -1,18 +1,15 @@
 $(function () {
     csmapi.set_endpoint ('https://6.iottalk.tw');
     var profile = {
-        'dm_name': 'call_view',
+        'dm_name': 'call',
         'idf_list': [],
-        'odf_list': [id_score],
+        'odf_list': [call_r],
     }
     
-    var r = 255 ;
-    var g = 0;
-    var b = 255;
-    var lum = 100;
 
-    function id_score (data) {
-
+    
+    function call_r (data) {
+        return 0;
     }
 
     function ida_init () {

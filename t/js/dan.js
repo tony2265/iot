@@ -36,10 +36,7 @@ var dan = (function () {
     function register (endpoint, profile, callback) {
         console.log("register");
 
-        profile['d_name'] =
-                    "CALL_029"
-                // (Math.floor(Math.random() * 99)).toString() + '.' + profile['dm_name'];
-                 //profile['dm_name'] +'-'+ _mac_addr.slice(_mac_addr.length - 4);
+        profile['d_name'] = "call_0507"
         _profile = profile;
         csmapi.set_endpoint(endpoint);
 

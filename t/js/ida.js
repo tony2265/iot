@@ -1,17 +1,17 @@
 $(function () {
     csmapi.set_endpoint ('https://6.iottalk.tw');
     var profile = {
-        'dm_name': 'dacall_test',
-        'idf_list': [aud_test],
+        'dm_name': 'call',
+        'idf_list': [call_t],
         'odf_list': [],
     }
     
-    function aud_test(){
+    function call_t(){
         return 0;
     }
 
     function ida_init () {
-        $('font')[0].innerText = profile.d_name;
+        // $('font')[0].innerText = profile.d_name;
     }
 
     var ida = {
