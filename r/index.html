@@ -9,12 +9,13 @@
   <body>
     <h1>Call View</h1>
     <p>從伺服器收到的最新資料: <span id="latest-data"></span></p>
-    <p>已記錄螢光棒總數: <span id="total-bulbs"></span></p>
-    <p>各螢光棒id與其分數:</p>
-    <ul id="bulb-scores"></ul>
+    <p>總人數: <span id="person_num"></span></p>
+    <p>總分數: <span id="score_num"></span></p>
+    <p>總資料:</p>
+    <ul id="total_data"></ul>
 
     <script>
-      var bulbData = {};
+      var u_list = {};
 
       function updateData() {
         var mac_addr = "callrr";
@@ -30,22 +31,29 @@
             // 取出最新一筆資料的值
             var latestData = data[0][1];
             var id = latestData[0];
-            var score = latestData[1];
+            var name = latestData[1];
+            var score = latestData[2];
+            u_list[id] = {"score":score,"name":name};
 
             // 更新顯示在頁面上的資訊
             $("#latest-data").text(JSON.stringify(latestData));
+            $("#person_num").text(Object.keys(u_list).length);
 
-            bulbData[id] = score;
+            var $totalDatas = $("#total_data");
+            $totalDatas.empty();
 
-            $("#total-bulbs").text(Object.keys(bulbData).length);
-
-            var $bulbScores = $("#bulb-scores");
-            $bulbScores.empty();
-            for (var bulbId in bulbData) {
-                $bulbScores.append(
-                "<li>ID: " + bulbId + ", 分數: " + bulbData[bulbId] + "</li>"
+            var total_score = 0;
+            for (var ii in u_list) {
+                $totalDatas.append(
+                "<li>ID: " + ii + ", 暱稱: " + u_list[ii].name +", 分數: " + u_list[ii].score + "</li>"
                 );
+                total_score += u_list[ii].score;
             }
+
+            var $score_num = $("#score_num");
+            $score_num.text(total_score);
+
+
 
             // 每 1 秒更新一次
             setTimeout(updateData, 200);
