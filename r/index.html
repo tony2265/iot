@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Call View</title>
+    <script src="js/jquery.js" type="text/javascript"></script>
+    <script src="js/csmapi.js"></script>
+  </head>
+  <body>
+    <h1>Call View</h1>
+    <p>從伺服器收到的最新資料: <span id="latest-data"></span></p>
+    <p>已記錄螢光棒總數: <span id="total-bulbs"></span></p>
+    <p>各螢光棒id與其分數:</p>
+    <ul id="bulb-scores"></ul>
+
+    <script>
+      var bulbData = {};
+
+      function updateData() {
+        var mac_addr = "callview";
+        var odf_name = "id_score";
+
+        // 呼叫 csmapi.js 的 pull 函式
+        csmapi.pull(mac_addr, odf_name, function (data, error) {
+            if (error) {
+                console.error("Failed to pull Luminance:", error);
+                return;
+            }
+
+            // 取出最新一筆資料的值
+            var latestData = data[0][1];
+            var id = latestData[0];
+            var score = latestData[1];
+
+            // 更新顯示在頁面上的資訊
+            $("#latest-data").text(JSON.stringify(latestData));
+
+            bulbData[id] = score;
+
+            $("#total-bulbs").text(Object.keys(bulbData).length);
+
+            var $bulbScores = $("#bulb-scores");
+            $bulbScores.empty();
+            for (var bulbId in bulbData) {
+                $bulbScores.append(
+                "<li>ID: " + bulbId + ", 分數: " + bulbData[bulbId] + "</li>"
+                );
+            }
+
+            // 每 1 秒更新一次
+            setTimeout(updateData, 200);
+        });
+      }
+
+      // 初始化
+      csmapi.set_endpoint("https://6.iottalk.tw");
+      updateData();
+
+    </script>
+  </body>
+</html>
