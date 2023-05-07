@@ -134,6 +134,7 @@
     <p>Z 軸加速度: <span id="accelerationZ">0</span> m/s²</p>
 
     <script>
+        var uuid = 0;
         function onSignIn1(response) {
             var credential = response.credential,
             profile = JSON.parse(
@@ -153,6 +154,7 @@
             html += "會員頭像：" + profile.picture + "<br/>";
             html += "會員 email：" + profile.email + "<br/>";
             target.innerHTML = html;
+            uuid = profile.sub;
         }
 
         function pushscore() {
