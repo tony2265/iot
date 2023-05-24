@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h2>Data from Server</h2>
+
+<button type="button" onclick="getData()">Get Data</button>
+
+<p id="demo"></p>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<script>
+function getData() {
+  var url = "https://61d8-2001-288-4001-d830-6d32-765b-3486-a204.jp.ngrok.io/data";
+  $.ajax({
+    url: url,
+    type: 'GET',
+    success: function(data, status, xhr) {
+      $('#demo').html(JSON.stringify(data, null, 2));
+    },
+    error: function(jqXHR, textStatus, errorThrown) {
+      console.error('Error:', textStatus, ',', errorThrown);
+    }
+  });
+}
+</script>
+
+</body>
+</html>
