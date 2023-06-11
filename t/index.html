@@ -10,8 +10,9 @@
       }
     </style>
     <script src="js/jquery.js" type="text/javascript"></script>
-    <script src="js/csmapi.js"></script>
     <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <script src="https://iottalk.github.io/iottalk-js/iottalkjs-v2.3.1.js"></script>
+
   </head>
 
   <script>
@@ -105,16 +106,6 @@
   </script>
 
   <body>
-    <div
-        id="g_id_onload"
-        data-client_id="574577788873-rgrojpv60ea0h4imtl3pdpg0m7q8m7g3.apps.googleusercontent.com"
-        data-callback="onSignIn1"
-    ></div>
-    <div class="g_id_signin" data-type="standard"></div>
-
-    目前狀態：
-
-    <span id="GOOGLE_STATUS_1"></span>
 
     <hr />
 
@@ -136,51 +127,43 @@
     <script>
         var uuid = 0;
         var name = '';
-        function onSignIn1(response) {
-            var credential = response.credential,
-            profile = JSON.parse(
-                decodeURIComponent(
-                escape(
-                    window.atob(
-                    credential.split(".")[1].replace(/-/g, "+").replace(/_/g, "/")
-                    )
-                )
-                )
-            ), // 對 JWT 進行解碼
-            target = document.getElementById("GOOGLE_STATUS_1"),
-            html = "";
-
-            html += "ID: " + profile.sub + "<br/>";
-            html += "會員暱稱： " + profile.name + "<br/>";
-            html += "會員頭像：" + profile.picture + "<br/>";
-            html += "會員 email：" + profile.email + "<br/>";
-            target.innerHTML = html;
-            uuid = profile.sub;
-            name = profile.name;
-            pushscore();
-
-        }
-
+        
+        pushscore();
         function pushscore() {
             // 設定要 push 的裝置和資訊
-            var mac_addr = "calltt";
+            var mac_addr = "36ab6f77-cd9a-4fba-95ca-7b3f4c45e1c3";
             var idf_name = "callt";
+            const callt  = () => { return [uuid,name, level]; };
+            // const callr = () => { ... };
+
+            const da = new iottalkjs.DAI({
+            apiUrl: 'https://example.com/csm',
+            deviceModel: 'call',
+            deviceName: 'call_0507',
+            deviceAddr: '36ab6f77-cd9a-4fba-95ca-7b3f4c45e1c3',
+            persistentBinding: true,
+            idfList: [[callt, [uuid,name, level]]],
+            // odfList: [[Dummy_Control, ['dB']]],
+            });
+
+            da.run();
+
 
             // 呼叫 csmapi.js 的 push 函式
-            csmapi.push(
-            mac_addr,
-            idf_name,
-            [uuid,name, level],
-            function (data, error) {
-                if (error) {
-                console.error("Failed to push score :", error);
-                return;
-                }
+            // csmapi.push(
+            // mac_addr,
+            // idf_name,
+            // [uuid,name, level],
+            // function (data, error) {
+            //     if (error) {
+            //     console.error("Failed to push score :", error);
+            //     return;
+            //     }
 
-                // 每 5 秒更新一次
-                setTimeout(pushscore, 5000);
-            }
-            );
+            //     // 每 5 秒更新一次
+            //     setTimeout(pushscore, 5000);
+            // }
+            // );
         }
 
         // 初始化
@@ -188,7 +171,7 @@
         var id = document.getElementById("id");
         id.innerHTML = user_id;
 
-        csmapi.set_endpoint("https://6.iottalk.tw");
+        // csmapi.set_endpoint("https://iottalk2.tw/");
 
     </script>
   </body>
